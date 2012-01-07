@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="./js/atom-full-compiled.js"></script>
+    <script type="text/javascript" src="./js/libcanvas-full-compiled.js"></script>
+    <script type="text/javascript" src="./js/VisualizeManager.js"></script>
+    <script type="text/javascript" src="./js/Visualizer.js"></script>
+    <script type="text/javascript" src="./js/DataStream.js"></script>
+    <script type="text/javascript" src="./js/DataTransrom.js"></script>
+    <script type="text/javascript" src="./js/main.js"></script>
+</head>
+<body style="background-color: #333333">
+<div id="view">
+    <div id="plot">
+        <canvas id="data" width="800" height="300"
+                style="position: absolute; left: 0px; top: 0px; z-index: 2;"></canvas>
+        <canvas id="grid" width="800" height="300"
+                style="position: absolute; left: 0px; top: 0px; z-index: 1;"></canvas>
+    </div>
+    <div id="settings" style="position: absolute; left: 20px; top: 350px; color:#FFFFFF">
+        <label>Sweep:</label><input type="text" id="sweep"/><br/>
+        <label>Number of points in single frame:</label><input type="text" id="numberOfPoints"/><br/>
+        <label>Max value in data stream:</label><input type="text" id="maxValue"/><br/>
+        <label>Number of frames:</label><input type="text" id="numberOfFrames"/><br/>
+        <button id="draw" onclick="StartDrawing()">
+            Draw!
+        </button>
+    </div>
+</div>
+
+</body>
+</html>
