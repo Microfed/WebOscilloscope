@@ -1,7 +1,7 @@
 /**
  * Created by JetBrains WebStorm.
  * User: Microfed
- * Date: 07.01.12
+ * Date: 03.01.12
  * Time: 15:57
  * To change this template use File | Settings | File Templates.
  */
@@ -11,6 +11,11 @@ Visualize.loop;
 
 atom.dom(function () {
     var visualizeManager = new Visualize.VisualizeManager("localhost", 100, 800);
+
+    atom.dom('canvas').filter('#data').first.style.width = screen.width;
+    //atom.dom('canvas').height = screen.height;
+    atom.dom('input').filter('#numberOfPoints').first.value = screen.width;
+    atom.dom('input').filter('#sweep').first.value = screen.height;
 });
 
 function CreateVisualizer(sweep, countOfPoints, maxAbsValue, countOfFrames) {
