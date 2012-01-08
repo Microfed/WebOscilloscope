@@ -12,37 +12,38 @@ Visualize.Visualizer = atom.Class({
         this.dataContext = dataContext;
         this.countOfPoints = countOfPoints;
         this.yAxis = dataContext.height / 2 - sweep / 2;
-        this.drawGrid(gridContext);
+        this.drawGrid();
         this.dataContext.strokeStyle = 'red';
         this.magicOutOfSweep = 32568;
     },
 
 
-    drawGrid:function (context) {
-        var i,
-            height = context.height,
-            width = context.width,
+    drawGrid:function () {
+        var gridContext = this.gridContext,
+            i,
+            height = gridContext.height,
+            width = gridContext.width,
             gridStep = 25;
 
-        context.lineWidth = 0.1;
+        gridContext.lineWidth = 0.1;
 
         for (i = 0; i < width; i += gridStep) {
-            context.beginPath(i, 0);
-            context.lineTo(i, height);
-            context.stroke('#dddddd').closePath();
+            gridContext.beginPath(i, 0);
+            gridContext.lineTo(i, height);
+            gridContext.stroke('#dddddd').closePath();
         }
         for (i = 0; i < height; i += gridStep) {
-            context.beginPath(0, i);
-            context.lineTo(width, i);
-            context.stroke('#dddddd').closePath();
+            gridContext.beginPath(0, i);
+            gridContext.lineTo(width, i);
+            gridContext.stroke('#dddddd').closePath();
         }
 
-        context.lineWidth = 0.7;
-        context.beginPath(0, context.height / 2);
-        context.lineTo(context.width, context.height / 2).stroke('#fff08d').closePath();
-        context.beginPath(context.width / 2, 0);
-        context.lineTo(context.width / 2, context.height).stroke('#fff08d').closePath();
-        context.lineWidth = 1;
+        gridContext.lineWidth = 0.7;
+        gridContext.beginPath(0, gridContext.height / 2);
+        gridContext.lineTo(gridContext.width, gridContext.height / 2).stroke('#fff08d').closePath();
+        gridContext.beginPath(gridContext.width / 2, 0);
+        gridContext.lineTo(gridContext.width / 2, gridContext.height).stroke('#fff08d').closePath();
+        gridContext.lineWidth = 1;
     },
 
     drawFrame:function (data) {

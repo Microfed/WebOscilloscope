@@ -10,12 +10,19 @@ Visualize.stopDrawing = false;
 Visualize.loop;
 
 atom.dom(function () {
-    var visualizeManager = new Visualize.VisualizeManager("localhost", 100, 800);
+    var canvasWidth = window.innerWidth - 20,
+        canvasHeight = window.innerHeight,
+        visualizeManager = new Visualize.VisualizeManager("localhost", canvasHeight, canvasWidth);
 
-    atom.dom('canvas').filter('#data').first.style.width = screen.width;
-    //atom.dom('canvas').height = screen.height;
-    atom.dom('input').filter('#numberOfPoints').first.value = screen.width;
-    atom.dom('input').filter('#sweep').first.value = screen.height;
+    visualizeManager.gridContext.canvas.width = canvasWidth;
+    visualizeManager.gridContext.canvas.height = canvasHeight;
+    visualizeManager.dataContext.canvas.width = canvasWidth;
+    visualizeManager.dataContext.canvas.height = canvasHeight;
+    visualizeManager.visualizer.drawGrid();
+
+    atom.dom('input').filter('#numberOfPoints').first.value = canvasWidth;
+    atom.dom('input').filter('#sweep').first.value = canvasHeight;
+    atom.dom('div').filter('#settings').first.style.top = canvasHeight + 'px';
 });
 
 function CreateVisualizer(sweep, countOfPoints, maxAbsValue, countOfFrames) {
@@ -55,7 +62,7 @@ function StartDrawing() {
         maxAbsValue = atom.dom('input').filter('#maxValue').first.value,
         countOfFrames = atom.dom('input').filter('#numberOfFrames').first.value;
 
-    if(sweep > 0, countOfPoints > 0, maxAbsValue > 0, countOfFrames > 1){
-        CreateVisualizer(sweep,countOfPoints,maxAbsValue,countOfFrames);
+    if (sweep > 0, countOfPoints > 0, maxAbsValue > 0, countOfFrames > 1) {
+        CreateVisualizer(sweep, countOfPoints, maxAbsValue, countOfFrames);
     }
 }
