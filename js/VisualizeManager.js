@@ -19,10 +19,8 @@ Visualize.VisualizeManager = atom.Class({
 
     getCanvasContext:function (name) {
         var LC = LibCanvas.extract({}),
-            canvas = atom.dom('canvas').filter('#' + name).first,
-            context = canvas.getContext('2d-libcanvas');
-
-        return context;
+            canvas = atom.dom('canvas').filter('#' + name).first;
+        return canvas.getContext('2d-libcanvas');
     },
 
     drawCurrentFrame:function (data) {

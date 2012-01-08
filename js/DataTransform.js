@@ -14,7 +14,7 @@ Visualize.DataTransform = atom.Class({
     },
 
     getFormattedData:function (array, callback) {
-        var i = 0, j = 0,
+        var i, j = 0,
             step = 1,
             length = array.length,
             over = 0,

@@ -7,7 +7,6 @@
  */
 
 Visualize.stopDrawing = false;
-Visualize.loop;
 
 atom.dom(function () {
     var canvasWidth = window.innerWidth - 20,
@@ -28,10 +27,9 @@ atom.dom(function () {
 function CreateVisualizer(sweep, countOfPoints, maxAbsValue, countOfFrames) {
     var visualizeManager = new Visualize.VisualizeManager("localhost", sweep, countOfPoints),
         dataLength = countOfFrames,
-        periodLength = countOfPoints,
         period = [],
         data = [],
-        j = 0, i = 0, k = 0,
+        j, i = 0, k = 0,
         loop,
         draw = function () {
             var drawFrame = function (data) {
@@ -43,11 +41,11 @@ function CreateVisualizer(sweep, countOfPoints, maxAbsValue, countOfFrames) {
             if (k === dataLength || Visualize.stopDrawing) {
                 clearInterval(loop);
             }
-        }
+        };
 
     for (j = 0; j < dataLength; j += 1) {
         period = [];
-        for (i = 0; i < periodLength; i += 1) {
+        for (i = 0; i < countOfPoints; i += 1) {
             period[i] = Math.floor(Math.random() * maxAbsValue);
         }
         data.push(period);
@@ -62,7 +60,7 @@ function StartDrawing() {
         maxAbsValue = atom.dom('input').filter('#maxValue').first.value,
         countOfFrames = atom.dom('input').filter('#numberOfFrames').first.value;
 
-    if (sweep > 0, countOfPoints > 0, maxAbsValue > 0, countOfFrames > 1) {
+    if (sweep > 0 && countOfPoints > 0 && maxAbsValue > 0 && countOfFrames > 1) {
         CreateVisualizer(sweep, countOfPoints, maxAbsValue, countOfFrames);
     }
 }

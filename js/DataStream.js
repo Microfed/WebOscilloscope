@@ -17,7 +17,7 @@ Visualize.DataStream = atom.Class({
         atom.ajax({
             type:'json',
             method:'get',
-            url:this.self.adress,
+            url:this.adress,
             cache:false,
             onLoad:function (json) {
                 onDone(true);
@@ -32,23 +32,23 @@ Visualize.DataStream = atom.Class({
         atom.ajax({
             type:'json',
             method:'get',
-            url:this.self.adress,
+            url:this.adress,
             cache:false,
             onLoad:function (json) {
                 onReceiveCallback(json);
             },
             onError:function () {
-                this.self.state = "ready";
+                this.state = "ready";
                 onErrorCallback();
             }
         });
     },
 
     startReceiveData:function (frequency, onReceiveCallback, onErrorCallback) {
-        this.self.state = "receive";
+        this.state = "receive";
         var loop = setInterval(function () {
-            if (this.self.state === "receive") {
-                this.self.receiveData(onReceiveCallback, onErrorCallback)
+            if (self.state === "receive") {
+                this.receiveData(onReceiveCallback, onErrorCallback)
             } else {
                 clearInterval(loop);
             }
@@ -56,6 +56,6 @@ Visualize.DataStream = atom.Class({
     },
 
     stopReceiveData:function () {
-        this.self.state = "ready";
+        this.state = "ready";
     }
 });

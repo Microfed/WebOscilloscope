@@ -47,7 +47,7 @@ Visualize.Visualizer = atom.Class({
     },
 
     drawFrame:function (data) {
-        var i = 0,
+        var i,
             yAxis = this.yAxis,
             y;
         this.dataContext.clearAll();
@@ -60,4 +60,4 @@ Visualize.Visualizer = atom.Class({
         }
         this.dataContext.stroke();
     }
-})
+});
