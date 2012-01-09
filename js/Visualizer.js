@@ -117,12 +117,17 @@ Visualize.Visualizer = atom.Class(
         drawFrame:function (data) {
             var i,
                 yAxis = this.yAxis,
-                y;
+                y,
+                startPos = 0;
+
             this.dataContext.clearAll();
-            this.dataContext.beginPath(0.5, yAxis).lineJoin = 'round';
             for (i = 0; i < this.countOfPoints; i += 1) {
                 y = data[i];
-                if (y !== this.magicOutOfSweep) {
+                if (Math.floor(y) !== this.magicOutOfSweep) {
+                    if (startPos === 0) {
+                        startPos = i + 0.5;
+                        this.dataContext.beginPath(startPos, yAxis).lineJoin = 'round';
+                    }
                     this.dataContext.lineTo(i + 0.5, data[i] + yAxis);
                 }
             }

@@ -17,7 +17,7 @@ Visualize.DataTransform = atom.Class(
     {
         /**
          * @class Класс, отвечающий за преобразование полученных от сервера
-         * данных в приемлимый для визуализатора формат.
+         * данных в приемлемый для визуализатора формат.
          *
          * Конструктор класса
          * @constructs
@@ -61,7 +61,11 @@ Visualize.DataTransform = atom.Class(
                 step = 1,
                 length = array.length,
                 over = 0,
-                newArray = [];
+                overInt = 0,
+                overMod = 0,
+                maxCountOfPoints = 0,
+                newArray = [],
+                curElement = 0;
 
             for (i = 0; i < length; i++) {
                 if (array[i] > this.sweep || array[i] < -(this.sweep)) {
@@ -85,15 +89,47 @@ Visualize.DataTransform = atom.Class(
                     }
                 }
             } else if (length < this.countOfPoints) {
-                for (j = 0; j < this.countOfPoints; j += 2) {
-                    if (j + 1 <= length) {
-                        newArray[j] = array[j / 2];
-                        newArray[j + 1] = (array[j / 2] + array[j / 2 + 1]) / 2;
+                over = this.countOfPoints / length;
+                overInt = Math.floor(over);
+                overMod = this.countOfPoints % length;
+                maxCountOfPoints = this.countOfPoints - overMod;
+
+                for (j = 0; j < overMod; j++) {
+                    newArray.push(this.magicOutOfSweep);
+                }
+
+                for (j = overMod; j < maxCountOfPoints; j += overInt) {
+                    if (j + overInt - 1 <= length) {
+                        curElement = array[j / overInt];
+                        if (curElement === this.magicOutOfSweep) {
+                            curElement = this.sweep;
+                        }
+                        newArray.push(curElement);
+                        for (i = 1; i < overInt; i += 1) {
+                            curElement = array[j / overInt];
+                            if (curElement === this.magicOutOfSweep) {
+                                curElement = this.sweep;
+                            }
+                            newArray.push(curElement);
+
+                            curElement = array[j / overInt + 1];
+                            if (curElement === this.magicOutOfSweep) {
+                                curElement = this.sweep;
+                            }
+
+                            newArray[i] += curElement;
+                            newArray[i] /= overInt;
+                        }
                     } else {
-                        newArray[j] = array[j / 2];
-                        newArray[j + 1] = (array[j / 2] + array[j / 2] + 1) / 2;
+                        newArray.push(array[j / overInt]);
+                        newArray.push((array[j / overInt] + array[j / overInt]) / overInt);
                     }
                 }
+
+                for (j = maxCountOfPoints; j < this.countOfPoints; j++) {
+                    newArray.push(this.magicOutOfSweep);
+                }
+
                 callback(newArray);
             }
 

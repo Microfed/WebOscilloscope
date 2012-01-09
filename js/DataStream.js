@@ -2,7 +2,7 @@
  * @fileOverview Файл содержит описание класса для работы с данными по сети.
  *
  * @author <a href="mailto:microfed@gmail.com">Microfed</a>
-  */
+ */
 
 /**
  * @namespace Пакет визуализатора. Содержит основные классы для работы с даными
@@ -95,14 +95,22 @@ Visualize.DataStream = atom.Class(
          * @param {Function} onErrorCallback  callback-функция. Вызывается в случае ошибки соединения
          */
         startReceiveData:function (frequency, onReceiveCallback, onErrorCallback) {
+            var socket = io.connect(this.address);
             this.state = "receive";
-            var loop = setInterval(function () {
-                if (self.state === "receive") {
-                    this.receiveData(onReceiveCallback, onErrorCallback)
-                } else {
-                    clearInterval(loop);
-                }
-            }, 1000 / frequency);
+
+            socket.on('connect', function () {
+                socket.emit("getData", {fr:frequency});
+                socket.on('newData', function (msg) {
+                    if (self.state === "ready") {
+                        socket.disconnect();
+                    }
+                    onReceiveCallback(msg.dataArray);
+                })
+            });
+
+            socket.on('disconnect', function () {
+                self.state = "ready";
+            });
         },
 
         /**

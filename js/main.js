@@ -19,7 +19,6 @@ atom.dom(function () {
     visualizeManager.dataContext.canvas.height = canvasHeight;
     visualizeManager.visualizer.drawGrid();
 
-    atom.dom('input').filter('#numberOfPoints').first.value = canvasWidth;
     atom.dom('input').filter('#sweep').first.value = canvasHeight;
     atom.dom('div').filter('#settings').first.style.top = canvasHeight + 'px';
 });
@@ -63,4 +62,51 @@ function StartDrawing() {
     if (sweep > 0 && countOfPoints > 0 && maxAbsValue > 0 && countOfFrames > 1) {
         CreateVisualizer(sweep, countOfPoints, maxAbsValue, countOfFrames);
     }
+}
+
+function CreateVisualizerWithNet(sweep, countOfPoints, address, frequency) {
+    var visualizeManager = new Visualize.VisualizeManager(address, sweep, countOfPoints),
+        draw = function (msg) {
+            var drawFrame = function (data) {
+                visualizeManager.visualizer.drawFrame(data);
+            },
+                receivedData = msg.dataArray;
+
+            visualizeManager.dataTransform.getFormattedData(receivedData, drawFrame);
+        },
+        socket = io.connect(address);
+
+    socket.on('connect', function () {
+        socket.emit("getData", {fr:frequency});
+
+        socket.on('newData', function (msg) {
+            if (Visualize.stopDrawing) {
+                socket.disconnect();
+            }
+            draw(msg);
+        });
+
+        socket.on('disconnect', function () {
+
+        });
+    });
+
+
+}
+
+function StartDrawingWithNet() {
+    var sweep = atom.dom('input').filter('#sweep').first.value,
+        frequency = atom.dom('input').filter('#frequency').first.value,
+        address = atom.dom('input').filter('#host').first.value,
+        countOfPoints = window.innerWidth;
+
+    Visualize.stopDrawing = false;
+
+    if (sweep > 0 && countOfPoints > 0 && address !== "") {
+        CreateVisualizerWithNet(sweep, countOfPoints, address, frequency);
+    }
+}
+
+function StopReceivingData() {
+    Visualize.stopDrawing = true;
 }
