@@ -1,0 +1,91 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/**
+<span class='line'>  2</span>  * @fileOverview Файл содержит описание класса-менеджера, который отвечает за
+<span class='line'>  3</span>  * взаимодействие между модулем получения данных, преобразования и визуализатором.
+<span class='line'>  4</span>  *
+<span class='line'>  5</span>  * @author &lt;a href="mailto:microfed@gmail.com">Microfed&lt;/a>
+<span class='line'>  6</span>  */</span><span class="WHIT">
+<span class='line'>  7</span> 
+<span class='line'>  8</span> </span><span class="COMM">/**
+<span class='line'>  9</span>  * @namespace Пакет визуализатора. Содержит основные классы для работы с даными
+<span class='line'> 10</span>  * (получение, преобразование, отображение)
+<span class='line'> 11</span>  */</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">Visualize</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 13</span> 
+<span class='line'> 14</span> </span><span class="NAME">Visualize.VisualizeManager</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">atom.Class</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 16</span>      @lends Visualize.VisualizeManager#
+<span class='line'> 17</span>      */</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">    </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 20</span>          * @class Класс, отвечающий за межмодульное взаимодействие:
+<span class='line'> 21</span>          * включает в себя объекты классов для работы с сетью,
+<span class='line'> 22</span>          * данными, визуализацией.
+<span class='line'> 23</span>          *
+<span class='line'> 24</span>          * Конструктор класса
+<span class='line'> 25</span>          * @param {String} address IP-адрес сервера, у которого запрашиваются данные
+<span class='line'> 26</span>          * @param {Number} sweep Развертка осцилографа
+<span class='line'> 27</span>          * @param {Number} countOfPoints Количество точек (пикселей) на канвасе
+<span class='line'> 28</span>          * @constructs
+<span class='line'> 29</span>          */</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">        </span><span class="NAME">initialize</span><span class="PUNC">:</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">address</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sweep</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">countOfPoints</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 32</span>              *  Контекст канваса для координатной сетки
+<span class='line'> 33</span>              * @field
+<span class='line'> 34</span>              * @type HTMLCanvasElement
+<span class='line'> 35</span>              */</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">            </span><span class="NAME">this.gridContext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getCanvasContext</span><span class="PUNC">(</span><span class="STRN">"grid"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 38</span>              * Контекст канваса для отображения данных
+<span class='line'> 39</span>              * @field
+<span class='line'> 40</span>              * @type HTMLCanvasElement
+<span class='line'> 41</span>              */</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">            </span><span class="NAME">this.dataContext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getCanvasContext</span><span class="PUNC">(</span><span class="STRN">"data"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 44</span>              * Экземпляр класса визуализатора
+<span class='line'> 45</span>              * @field
+<span class='line'> 46</span>              * @type Visualize.Visualizer
+<span class='line'> 47</span>              */</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">            </span><span class="NAME">this.visualizer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Visualize.Visualizer</span><span class="PUNC">(</span><span class="NAME">this.gridContext</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.dataContext</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">countOfPoints</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">sweep</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 50</span>              * Экземпляр класса преобразователя данных
+<span class='line'> 51</span>              * @field
+<span class='line'> 52</span>              * @type Visualize.DataTransform
+<span class='line'> 53</span>              */</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">            </span><span class="NAME">this.dataTransform</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Visualize.DataTransform</span><span class="PUNC">(</span><span class="NAME">sweep</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">countOfPoints</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">            </span><span class="COMM">/**
+<span class='line'> 56</span>              * Экземпляр класса класса, обеспечивающего
+<span class='line'> 57</span>              * получение данных по сети
+<span class='line'> 58</span>              * @field
+<span class='line'> 59</span>              * @type Visualize.DataStream
+<span class='line'> 60</span>              */</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="WHIT">            </span><span class="NAME">this.dataStream</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Visualize.DataStream</span><span class="PUNC">(</span><span class="NAME">address</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 63</span> 
+<span class='line'> 64</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 65</span>          * @method Получает текущий контекст указанного html-элемента (canvas)
+<span class='line'> 66</span>          * @param {String} name Идентификатор html-элемента
+<span class='line'> 67</span>          */</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="WHIT">        </span><span class="NAME">getCanvasContext</span><span class="PUNC">:</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">LC</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">LibCanvas.extract</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="WHIT">                </span><span class="NAME">canvas</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">atom.dom</span><span class="PUNC">(</span><span class="STRN">'canvas'</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">filter</span><span class="PUNC">(</span><span class="STRN">'#'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">name</span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">first</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">canvas.getContext</span><span class="PUNC">(</span><span class="STRN">'2d-libcanvas'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 73</span> 
+<span class='line'> 74</span> </span><span class="WHIT">        </span><span class="COMM">/**
+<span class='line'> 75</span>          * @method Визуализирует кадр переданных данных
+<span class='line'> 76</span>          * в соответствии с внутренними настройками визуализатора.
+<span class='line'> 77</span>          * @param {Array} data Маcсив данных для визуализации
+<span class='line'> 78</span>          */</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="WHIT">        </span><span class="NAME">drawCurrentFrame</span><span class="PUNC">:</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">            </span><span class="NAME">self.visualizer.drawFrame</span><span class="PUNC">(</span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 82</span> 
+<span class='line'> 83</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 84</span> </span></pre></body></html>
